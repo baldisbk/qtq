@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>CategoryEditor.qml</file>
+        <file>ColorLine.qml</file>
+        <file>ColorRect.qml</file>
+        <file>MW.qml</file>
+        <file>TimeTable.qml</file>
+        <file>CategoriesModel.qml</file>
+        <file>Switcher.qml</file>
+        <file>CategorySelector.qml</file>
+        <file>TimeDelegate.qml</file>
+        <file>Calendar.qml</file>
+        <file>CalengarItem.qml</file>
+    </qresource>
+</RCC>
