@@ -128,8 +128,6 @@ bool TimeCalendar::isHoliday(int day, int month)
 
 bool TimeCalendar::isHoliday(int day)
 {
-	QDate d(getYear(), getMonth() + 1, day + 1);
-	qDebug() << d << d.dayOfWeek();
 	return QDate(getYear(), getMonth() + 1, day + 1).dayOfWeek() >= 6;
 }
 

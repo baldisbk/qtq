@@ -67,6 +67,7 @@ Item {
 		itemWidth: host.itemSize
 		number: date.days
 		delegate: Component {
+			id: dayDelegate
 			Item {
 				anchors {
 					top: parent.top
@@ -84,6 +85,10 @@ Item {
 					border.color: "black"
 					color: "#00000000"
 					radius: 10
+				}
+				MouseArea {
+					anchors.fill: parent
+					onClicked: parent.ListView.view.currentIndex = index
 				}
 			}
 		}
