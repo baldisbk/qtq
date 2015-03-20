@@ -15,11 +15,6 @@ Item {
 					day.current,
 					month.current);
 		}
-
-		onDateChanged: output("date")
-		onDayChanged: output("day")
-		onMonthChanged:  output("month")
-		onDaysChanged:  output("days")
 	}
 	property int itemSize
 
@@ -53,19 +48,15 @@ Item {
 			left: host.left
 			right: host.right
 		}
-		current: date.month
 		onCurrentChanged: {
-			date.output("m.cur")
 			if (!locked && date.month != current)
 				date.month = current
 		}
-		property bool locked: false
+		Component.onCompleted: current = date.month
 		Connections {
 			target: date
-			onLocked: {
-				month.locked = lock
-				console.log("lock", lock)
-			}
+			onLocked: month.locked = lock
+			onMonthChanged: month.current = date.month
 		}
 	}
 
@@ -86,7 +77,7 @@ Item {
 				Text {
 					text: index + 1
 					anchors.centerIn: parent
-					color: if (date.isHoliday(index+1)) return "red"; else return "black"
+					color: if (date.isHoliday(index)) return "red"; else return "black"
 				}
 				Rectangle {
 					anchors.fill: parent
@@ -101,19 +92,16 @@ Item {
 			left: host.left
 			right: host.right
 		}
-		current: date.day
 		onCurrentChanged: {
-			date.output("d.cur")
 			if (!locked && date.day != current)
 				date.day = current
 		}
-		property bool locked: false
+		Component.onCompleted: current = date.day
 		Connections {
 			target: date
-			onLocked: {
-				day.locked = lock
-				console.log("lock", lock)
-			}
+			onLocked: day.locked = lock
+			onDayChanged: day.current = date.day
+			onDaysChanged: day.current = date.day
 		}
 	}
 }

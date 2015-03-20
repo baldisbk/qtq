@@ -8,6 +8,7 @@ Item {
 	property int itemSize
 	property int itemWidth
 	property Component delegate
+	property bool locked: false
 	height: itemSize
 
 	Rectangle {

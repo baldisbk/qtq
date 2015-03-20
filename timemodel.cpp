@@ -128,6 +128,8 @@ bool TimeCalendar::isHoliday(int day, int month)
 
 bool TimeCalendar::isHoliday(int day)
 {
+	QDate d(getYear(), getMonth() + 1, day + 1);
+	qDebug() << d << d.dayOfWeek();
 	return QDate(getYear(), getMonth() + 1, day + 1).dayOfWeek() >= 6;
 }
 
@@ -176,7 +178,7 @@ void TimeCalendar::setMonth(int m)
 	emit locked(true);
 	if (getDays() != oldds) emit daysChanged();
 	emit locked(false);
-	if (oldd != newd || getDays() != oldds) emit dayChanged();
+	if (oldd != newd) emit dayChanged();
 	if (m != oldm) emit monthChanged();
 }
 
@@ -193,6 +195,6 @@ void TimeCalendar::setYear(int y)
 	emit locked(true);
 	if (getDays() != oldds) emit daysChanged();
 	emit locked(false);
-	if (oldd != newd || getDays() != oldds) emit dayChanged();
+	if (oldd != newd) emit dayChanged();
 	if (y != oldy) emit yearChanged();
 }
