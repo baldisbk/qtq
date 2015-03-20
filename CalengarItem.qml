@@ -59,6 +59,19 @@ Item {
 			top: parent.top
 		}
 		property int itemSize: host.itemSize
+		property int oldX
+		property int oldY
+
+		function save() {
+			oldX = contentX
+			oldY = contentY
+		}
+		function restore(index) {
+			contentX = oldX
+			contentY = oldY
+			currentIndex = index
+		}
+
 		height: itemSize
 
 		model: host.number
@@ -85,9 +98,15 @@ Item {
 		}
 		onCurrentIndexChanged: if (host.current != currentIndex) host.current = currentIndex
 	}
+	function save() {
+		list.save()
+	}
+	function restore(index) {
+		list.restore(index)
+	}
+
 	onCurrentChanged: {
 		if (list.currentIndex != current) {
-		//	console.log("scroll", x, y, current, list.currentIndex)
 			list.highlightMoveDuration = 0
 			list.currentIndex = current
 			list.positionViewAtIndex(current, ListView.Contain)

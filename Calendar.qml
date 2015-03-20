@@ -104,7 +104,13 @@ Item {
 		Component.onCompleted: current = date.day
 		Connections {
 			target: date
-			onLocked: day.locked = lock
+			onLocked: {
+				day.locked = lock
+				if (lock)
+					day.save()
+				else
+					day.restore(date.day)
+			}
 			onDayChanged: day.current = date.day
 			onDaysChanged: day.current = date.day
 		}
