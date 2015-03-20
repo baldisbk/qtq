@@ -73,6 +73,8 @@ signals:
 	void monthsChanged();
 
 	void dateChanged();
+
+	void locked(bool lock);
 private:
 	QDate mDate;
 };

@@ -2,6 +2,8 @@
 
 #include <QColor>
 
+#include <QDebug>
+
 #define HOUR_MIN 0
 #define HOUR_MAX 23
 #define HOUR_SPAN 4
@@ -171,16 +173,26 @@ void TimeCalendar::setMonth(int m)
 	if (newd >= getDays())
 		newd = getDays() - 1;
 	mDate.setDate(mDate.year(), m+1, newd + 1);
-	if (m != oldm) emit monthChanged();
+	emit locked(true);
 	if (getDays() != oldds) emit daysChanged();
-	if (oldd != newd) emit dayChanged();
+	emit locked(false);
+	if (oldd != newd || getDays() != oldds) emit dayChanged();
+	if (m != oldm) emit monthChanged();
 }
 
 void TimeCalendar::setYear(int y)
 {
 	int oldy = getYear();
 	int oldds = getDays();
-	mDate.setDate(y, mDate.month(), mDate.day());
-	if (y != oldy) emit yearChanged();
+	int oldd = getDay();
+	int newd = oldd;
+	mDate.setDate(y, mDate.month(), 1);
+	if (newd >= getDays())
+		newd = getDays() - 1;
+	mDate.setDate(y, mDate.month(), newd + 1);
+	emit locked(true);
 	if (getDays() != oldds) emit daysChanged();
+	emit locked(false);
+	if (oldd != newd || getDays() != oldds) emit dayChanged();
+	if (y != oldy) emit yearChanged();
 }

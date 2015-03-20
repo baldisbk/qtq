@@ -4,9 +4,22 @@ import TimeModel 1.0
 Item {
 	id: host
 	property TimeCalendar date: TimeCalendar {
-		onDateChanged: {
-			console.log(date.day, date.month, date.year);
+		function output(text) {
+			console.log(
+				text,
+				"date",
+					date.day,
+					date.month,
+					date.year,
+				"list",
+					day.current,
+					month.current);
 		}
+
+		onDateChanged: output("date")
+		onDayChanged: output("day")
+		onMonthChanged:  output("month")
+		onDaysChanged:  output("days")
 	}
 	property int itemSize
 
@@ -42,12 +55,17 @@ Item {
 		}
 		current: date.month
 		onCurrentChanged: {
-			var d = date.day
-			date.month = current
-			console.log("day", d, date.days)
-			if (d >= date.days)
-				d = 1
-			day.current = d
+			date.output("m.cur")
+			if (!locked && date.month != current)
+				date.month = current
+		}
+		property bool locked: false
+		Connections {
+			target: date
+			onLocked: {
+				month.locked = lock
+				console.log("lock", lock)
+			}
 		}
 	}
 
@@ -85,7 +103,17 @@ Item {
 		}
 		current: date.day
 		onCurrentChanged: {
-			date.day = current
+			date.output("d.cur")
+			if (!locked && date.day != current)
+				date.day = current
+		}
+		property bool locked: false
+		Connections {
+			target: date
+			onLocked: {
+				day.locked = lock
+				console.log("lock", lock)
+			}
 		}
 	}
 }

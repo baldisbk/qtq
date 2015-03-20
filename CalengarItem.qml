@@ -85,9 +85,8 @@ Item {
 		onCurrentIndexChanged: if (host.current != currentIndex) host.current = currentIndex
 	}
 	onCurrentChanged: {
-		console.log("c0", list.currentIndex, current)
 		if (list.currentIndex != current) {
-			//var cur = current
+		//	console.log("scroll", x, y, current, list.currentIndex)
 			list.highlightMoveDuration = 0
 			list.currentIndex = current
 			list.positionViewAtIndex(current, ListView.Contain)
