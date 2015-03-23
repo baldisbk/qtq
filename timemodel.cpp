@@ -53,6 +53,8 @@ QVariant TimeModel::data(const QModelIndex &index, int role) const
 		return mTexts.value(index.row(), QString());
 	case ColorRole:
 		return mColors.value(index.row(), -1);
+	case UidRole:
+		return mUids.value(index.row(), -1);
 	case Qt::DecorationRole:
 		switch (mColors.value(index.row(), -1)) {
 		case 0: return QColor(Qt::black);
@@ -82,14 +84,35 @@ QHash<int, QByteArray> TimeModel::roleNames() const
 	roles.insert(TextRole, "text");
 	roles.insert(ColorRole, "colorId");
 	roles.insert(TimeRole, "time");
+	roles.insert(UidRole, "uid");
 	return roles;
 }
 
-void TimeModel::setTimeAttrs(int ind, int color, QString text)
+int TimeModel::rowNo() const
+{
+	return rowCount(QModelIndex());
+}
+
+int TimeModel::uid(int ind) const
+{
+	return mUids.value(ind, -1);
+}
+
+void TimeModel::setTimeAttrs(int ind, int color, QString text, int uid)
 {
 	QModelIndex i = index(ind, 0, QModelIndex());
 	mColors[i.row()] = color;
 	mTexts[i.row()] = text;
+	mUids[i.row()] = uid;
+	emit dataChanged(i, i);
+}
+
+void TimeModel::clearTimeAttrs(int ind)
+{
+	QModelIndex i = index(ind, 0, QModelIndex());
+	mColors.remove(i.row());
+	mTexts.remove(i.row());
+	mUids.remove(i.row());
 	emit dataChanged(i, i);
 }
 
@@ -100,6 +123,19 @@ TimeCalendar::TimeCalendar()
 	connect(this, SIGNAL(monthChanged()), SIGNAL(dateChanged()));
 	connect(this, SIGNAL(yearChanged()), SIGNAL(dateChanged()));
 	mDate = QDate::currentDate();
+}
+
+TimeCalendar::TimeCalendar(const TimeCalendar &c): QObject(c.parent())
+{
+	*this = c;
+}
+
+TimeCalendar &TimeCalendar::operator=(const TimeCalendar &c)
+{
+	setYear(c.getYear());
+	setMonth(c.getMonth());
+	setDay(c.getDay());
+	return *this;
 }
 
 QString TimeCalendar::monthName(int m) const
@@ -131,6 +167,16 @@ bool TimeCalendar::isHoliday(int day)
 	return QDate(getYear(), getMonth() + 1, day + 1).dayOfWeek() >= 6;
 }
 
+TimeCalendar TimeCalendar::today() const
+{
+	return TimeCalendar();
+}
+
+QString TimeCalendar::string() const
+{
+	return mDate.toString();
+}
+
 int TimeCalendar::getDays() const
 {
 	return mDate.daysInMonth();
@@ -158,6 +204,8 @@ int TimeCalendar::getYear() const
 
 void TimeCalendar::setDay(int d)
 {
+	if (d<0 || d>=getDays())
+		return;
 	int oldd = getDay();
 	mDate.setDate(mDate.year(), mDate.month(), d+1);
 	if (d != oldd) emit dayChanged();
@@ -165,6 +213,8 @@ void TimeCalendar::setDay(int d)
 
 void TimeCalendar::setMonth(int m)
 {
+	if (m<0 || m>=getMonths())
+		return;
 	int oldm = getMonth();
 	int oldds = getDays();
 	int oldd = getDay();

@@ -3,20 +3,21 @@ import TimeModel 1.0
 
 Item {
 	id: host
-	property TimeCalendar date: TimeCalendar {
-		function output(text) {
-			console.log(
-				text,
-				"date",
-					date.day,
-					date.month,
-					date.year,
-				"list",
-					day.current,
-					month.current);
-		}
+	property TimeCalendar date
+	function output(text) {
+		console.log(
+			text,
+			"date",
+				date.day,
+				date.month,
+				date.year,
+			"list",
+				day.current,
+				month.current);
 	}
 	property int itemSize
+
+	height: month.height + day.height
 
 	CalengarItem {
 		id: month

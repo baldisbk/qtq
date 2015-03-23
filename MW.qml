@@ -14,16 +14,10 @@ Window {
 
 	CategoriesModel {id: theCategories}
 	TimeModel {id: timeModel}
+	TimeCalendar {id: calendar}
 
 	ObjectModel {
 		id: thePages
-		Calendar {
-			id: calendar
-			height: theMainView.height
-			width: theMainView.width
-			itemSize: mw.itemSize
-			anchors.topMargin: headerSize
-		}
 
 		CategoryEditor {
 			id: catEditor
@@ -34,11 +28,13 @@ Window {
 			theModel: theCategories
 		}
 		TimeTable {
+			id: timeTable
 			height: theMainView.height
 			width: theMainView.width
 			itemSize: mw.itemSize
 			catModel: theCategories
 			timeModel: timeModel
+			calendar: calendar
 		}
 	}
 
@@ -57,7 +53,6 @@ Window {
 
 	ListModel {
 		id: theHeaderModel
-		ListElement {name: "Calendar"}
 		ListElement {name: "Categories"}
 		ListElement {name: "TimeTable"}
 	}
@@ -118,6 +113,52 @@ Window {
 			});
 		}
 	}
+	Connections {
+		target: timeTable
+		onDoSave: {
+			var rn = timeModel.rowNo()
+			for (var i = 0; i < rn; ++i) {
+				var uid = timeModel.uid(i);
+				if (uid === -1)
+					continue;
+				db.transaction(function(tx){
+					tx.executeSql(
+						"INSERT INTO Timetable("+
+							"year, month, day, "+
+							"time, catuid) "+
+							"VALUES(?, ?, ?, ?, ?)",
+						[
+							calendar.year,
+							calendar.month,
+							calendar.day,
+							i, uid ]);
+				});
+			}
+		}
+		onDoLoad: {
+			db.transaction(function(tx){
+				var rs = tx.executeSql(
+					"SELECT time, catuid FROM Timetable "+
+					"WHERE year=? AND month=? AND day=?",
+					[ calendar.year, calendar.month, calendar.day ]);
+				var rn = timeModel.rowNo()
+				for(var i = 0; i < rn; ++i)
+					timeModel.clearTimeAttrs(i)
+				for(var i = 0; i < rs.rows.length; i++) {
+					var cat = tx.executeSql(
+						"SELECT name, color "+
+						"FROM Categories "+
+						"WHERE uid=?",
+						[rs.rows.item(i).catuid] )
+					timeModel.setTimeAttrs(
+						rs.rows.item(i).time,
+						cat.rows.item(0).color,
+						cat.rows.item(0).name,
+						rs.rows.item(i).catuid);
+				}
+			});
+		}
+	}
 
 	Component.onCompleted: {
 		db = LocalStorage.openDatabaseSync("ExampleDB", "1.0", "", 0);
@@ -129,6 +170,14 @@ Window {
 					'uid INTEGER PRIMARY KEY AUTOINCREMENT,'+
 					'name TEXT,'+
 					'color INTEGER)');
+			tx.executeSql(
+				'CREATE TABLE IF NOT EXISTS Timetable('+
+					'uid INTEGER PRIMARY KEY AUTOINCREMENT,'+
+					'year INTEGER,'+
+					'month INTEGER,'+
+					'day INTEGER,'+
+					'time INTEGER,'+
+					'catuid INTEGER)');
 		});
 		db.readTransaction(function(tx) {
 			var rs = tx.executeSql('SELECT * FROM Categories');

@@ -15,7 +15,8 @@ public:
 	enum Roles {
 		TextRole = Qt::UserRole,
 		ColorRole,
-		TimeRole
+		TimeRole,
+		UidRole
 	};
 
 	// QAbstractItemModel interface
@@ -27,18 +28,25 @@ public:
 	virtual QVariant data(const QModelIndex &index, int role) const;
 	virtual QHash<int, QByteArray> roleNames() const;
 
+	Q_INVOKABLE int rowNo() const;
+	Q_INVOKABLE int uid(int ind) const;
+
 public slots:
-	void setTimeAttrs(int ind, int color, QString text);
+	void setTimeAttrs(int ind, int color, QString text, int uid);
+	void clearTimeAttrs(int ind);
 
 private:
 	QMap<int, int> mColors;
 	QMap<int, QString> mTexts;
+	QMap<int, int> mUids;
 };
 
 class TimeCalendar : public QObject {
 	Q_OBJECT
 public:
 	TimeCalendar();
+	TimeCalendar(const TimeCalendar& c);
+	TimeCalendar& operator=(const TimeCalendar& c);
 
 	Q_PROPERTY(int day READ getDay WRITE setDay NOTIFY dayChanged)
 	Q_PROPERTY(int month READ getMonth WRITE setMonth NOTIFY monthChanged)
@@ -50,6 +58,9 @@ public:
 	Q_INVOKABLE QString monthName(int m) const;
 	Q_INVOKABLE bool isHoliday(int day, int month);
 	Q_INVOKABLE bool isHoliday(int day);
+
+	Q_INVOKABLE TimeCalendar today() const;
+	Q_INVOKABLE QString string() const;
 
 	int getDays() const;
 	int getMonths() const;
