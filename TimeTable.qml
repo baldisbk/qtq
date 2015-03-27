@@ -68,23 +68,29 @@ Item {
 			bottomMargin: itemSize
 		}
 	}
-	Rectangle {
+	Button {
+		id: saveButton
 		anchors {
 			bottom: parent.bottom
-			left: parent.left
-			right: parent.right
+				left: parent.left
+//				right: parent.right
 		}
-		height: itemSize
-		radius: 10
-		border.color: "black"
-		Text {
-			text: "Save"
-			anchors.centerIn: parent
+		text: "Save"
+		itemSize: host.itemSize
+		width: parent.width/2
+		onClicked: host.doSave()
+	}
+	Button {
+		id: todayButton
+		width: parent.width/2
+		anchors {
+			bottom: parent.bottom
+//				left: parent.left
+				right: parent.right
 		}
-		MouseArea {
-			anchors.fill: parent
-			onClicked: host.doSave()
-		}
+		text: "Today"
+		itemSize: host.itemSize
+		onClicked: host.doSave()
 	}
 	Component.onCompleted: doLoad()
 	Connections {

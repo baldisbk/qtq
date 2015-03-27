@@ -12,5 +12,6 @@
         <file>TimeDelegate.qml</file>
         <file>Calendar.qml</file>
         <file>CalengarItem.qml</file>
+        <file>Button.qml</file>
     </qresource>
 </RCC>

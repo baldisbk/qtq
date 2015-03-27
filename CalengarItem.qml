@@ -11,44 +11,28 @@ Item {
 	property bool locked: false
 	height: itemSize
 
-	Rectangle {
+	Button {
 		id: leftBut
-		height: itemSize
-		width: itemSize
-		border.color: "black"
-		radius: 10
 		anchors {
 			top: parent.top
 			left: parent.left
 		}
-		Text {
-			anchors.centerIn: parent
-			text: "<"
-		}
-		MouseArea {
-			anchors.fill: parent
-			onClicked: list.decrementCurrentIndex()
-		}
+		text: "<"
+		itemSize: host.itemSize
+		width: itemSize
+		onClicked: list.decrementCurrentIndex()
 	}
 
-	Rectangle {
+	Button {
 		id: rightBut
-		height: itemSize
+		itemSize: host.itemSize
 		width: itemSize
-		border.color: "black"
-		radius: 10
 		anchors {
 			top: parent.top
 			right: parent.right
 		}
-		Text {
-			anchors.centerIn: parent
-			text: ">"
-		}
-		MouseArea {
-			anchors.fill: parent
-			onClicked: list.incrementCurrentIndex()
-		}
+		text: ">"
+		onClicked: list.incrementCurrentIndex()
 	}
 
 	ListView {
