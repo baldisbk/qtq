@@ -2,6 +2,8 @@ TEMPLATE = app
 
 QT += qml quick widgets
 
+TARGET = TimeManager
+
 SOURCES += main.cpp \
     timemodel.cpp
 
