@@ -10,7 +10,8 @@ Item {
 		anchors.top: parent.top
 		text: model.time
 		height: itemSize
-		width: 50
+		width: itemSize * 2
+		verticalAlignment: Text.AlignVCenter
 	}
 	ColorRect {
 		id: timeColor

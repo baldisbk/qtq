@@ -9,8 +9,7 @@ Window {
 	visible: true
 	height: 500
 	width: 300
-	readonly property int headerSize: 30
-	property int itemSize: width / 10
+	property int itemSize: width / 6
 
 	CategoriesModel {id: theCategories}
 	TimeModel {id: timeModel}
@@ -18,15 +17,6 @@ Window {
 
 	ObjectModel {
 		id: thePages
-
-		CategoryEditor {
-			id: catEditor
-			height: theMainView.height
-			width: theMainView.width
-			itemSize: mw.itemSize
-			anchors.topMargin: headerSize
-			theModel: theCategories
-		}
 		TimeTable {
 			id: timeTable
 			height: theMainView.height
@@ -36,11 +26,19 @@ Window {
 			timeModel: timeModel
 			calendar: calendar
 		}
+		CategoryEditor {
+			id: catEditor
+			height: theMainView.height
+			width: theMainView.width
+			itemSize: mw.itemSize
+			anchors.topMargin: itemSize
+			theModel: theCategories
+		}
 	}
 
 	ListView {
 		id: theMainView
-		anchors { fill: parent; topMargin: headerSize }
+		anchors { fill: parent; topMargin: itemSize }
 		model: thePages
 		preferredHighlightBegin: 0; preferredHighlightEnd: 0
 		highlightRangeMode: ListView.StrictlyEnforceRange
@@ -53,15 +51,17 @@ Window {
 
 	ListModel {
 		id: theHeaderModel
-		ListElement {name: "Categories"}
 		ListElement {name: "TimeTable"}
+		ListElement {name: "Categories"}
 	}
 
 	Text {
 		id: theHeader
-		height: headerSize
+		height: itemSize
 		anchors.left: parent.left
 		anchors.right: parent.right
+		anchors.top: parent.top
+		verticalAlignment: Text.AlignVCenter
 		function alterText(index) {
 			text = theHeaderModel.get(index).name;
 		}

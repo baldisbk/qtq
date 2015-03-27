@@ -22,7 +22,7 @@ Item {
 	CalengarItem {
 		id: month
 		itemSize: host.itemSize
-		itemWidth: host.itemSize * 8
+		itemWidth: host.itemSize * 4
 		number: date.months
 		delegate: Component {
 			Item {
