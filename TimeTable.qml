@@ -47,6 +47,7 @@ Item {
 	}
 
 	ListView {
+		id: timeTable
 		model: timeModel
 		delegate: TimeDelegate {
 			anchors.left: parent.left
@@ -97,4 +98,7 @@ Item {
 		target: calendar
 		onDateChanged: doLoad()
 	}
+	onDoLoad: timeTable.positionViewAtIndex(
+			calendar.time(),
+			ListView.Beginning)
 }

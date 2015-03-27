@@ -59,8 +59,8 @@ public:
 	Q_INVOKABLE bool isHoliday(int day, int month);
 	Q_INVOKABLE bool isHoliday(int day);
 
-	Q_INVOKABLE TimeCalendar today() const;
 	Q_INVOKABLE QString string() const;
+	Q_INVOKABLE int time() const;
 
 	int getDays() const;
 	int getMonths() const;

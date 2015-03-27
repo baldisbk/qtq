@@ -167,14 +167,18 @@ bool TimeCalendar::isHoliday(int day)
 	return QDate(getYear(), getMonth() + 1, day + 1).dayOfWeek() >= 6;
 }
 
-TimeCalendar TimeCalendar::today() const
-{
-	return TimeCalendar();
-}
-
 QString TimeCalendar::string() const
 {
 	return mDate.toString();
+}
+
+int TimeCalendar::time() const
+{
+	QTime cur = QDateTime::currentDateTime().time();
+	int h = cur.hour();
+	if (h < HOUR_MIN) h = HOUR_MIN;
+	if (h > HOUR_MAX) h = HOUR_MAX;
+	return h * HOUR_SPAN + cur.minute() * HOUR_SPAN / 60;
 }
 
 int TimeCalendar::getDays() const
