@@ -91,7 +91,12 @@ Item {
 		}
 		text: "Today"
 		itemSize: host.itemSize
-		onClicked: host.doSave()
+		TimeCalendar {id:today}
+		onClicked: {
+			calendar.year = today.year
+			calendar.month = today.month
+			calendar.day = today.day
+		}
 	}
 	Component.onCompleted: doLoad()
 	Connections {
