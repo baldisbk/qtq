@@ -24,7 +24,7 @@ Item {
 				anchors.fill: parent
 				onClicked: {
 					listView.isPressed = !listView.isPressed
-					listView.contentY = index * parent.width / 10
+					listView.contentY = index * itemSize
 				}
 			//	onPressed: listView.isPressed = true
 			//	onReleased: listView.isPressed = false
