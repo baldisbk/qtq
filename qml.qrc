@@ -14,5 +14,6 @@
         <file>CalengarItem.qml</file>
         <file>Button.qml</file>
         <file>TimeTableEdit.qml</file>
+        <file>BaseTimeTable.qml</file>
     </qresource>
 </RCC>

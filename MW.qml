@@ -13,6 +13,7 @@ Window {
 
 	CategoriesModel {id: theCategories}
 	TimeModel {id: timeModel}
+	TimeModel {id: baseTimeModel}
 	TimeCalendar {id: calendar}
 
 	ObjectModel {
@@ -25,6 +26,14 @@ Window {
 			catModel: theCategories
 			timeModel: timeModel
 			calendar: calendar
+		}
+		BaseTimeTable {
+			id: baseTable
+			height: theMainView.height
+			width: theMainView.width
+			itemSize: mw.itemSize
+			catModel: theCategories
+			timeModel: baseTimeModel
 		}
 		CategoryEditor {
 			id: catEditor
@@ -51,7 +60,8 @@ Window {
 
 	ListModel {
 		id: theHeaderModel
-		ListElement {name: "TimeTable"}
+		ListElement {name: "Timetable"}
+		ListElement {name: "Origin"}
 		ListElement {name: "Categories"}
 	}
 
@@ -160,6 +170,25 @@ Window {
 		}
 	}
 
+	Connections {
+		target: baseTable
+		onDoSave: {
+			var rn = baseTimeModel.rowNo()
+			for (var i = 0; i < rn; ++i) {
+				var uid = baseTimeModel.uid(i);
+				if (uid === -1)
+					continue;
+				db.transaction(function(tx){
+					tx.executeSql(
+						"INSERT INTO BaseTimetable("+
+							"time, catuid) "+
+							"VALUES(?, ?)",
+						[ i, uid ]);
+				});
+			}
+		}
+	}
+
 	Component.onCompleted: {
 		db = LocalStorage.openDatabaseSync("ExampleDB", "1.0", "", 0);
 
@@ -178,6 +207,11 @@ Window {
 					'day INTEGER,'+
 					'time INTEGER,'+
 					'catuid INTEGER)');
+			tx.executeSql(
+				'CREATE TABLE IF NOT EXISTS BaseTimetable('+
+					'uid INTEGER PRIMARY KEY AUTOINCREMENT,'+
+					'time INTEGER,'+
+					'catuid INTEGER)');
 		});
 		db.readTransaction(function(tx) {
 			var rs = tx.executeSql('SELECT * FROM Categories');
@@ -187,6 +221,24 @@ Window {
 					rs.rows.item(i).uid,
 					rs.rows.item(i).name,
 					rs.rows.item(i).color);
+			}
+
+			var rs2 = tx.executeSql(
+				"SELECT time, catuid FROM BaseTimetable", [ ]);
+			var rn = baseTimeModel.rowNo()
+			for(var i = 0; i < rn; ++i)
+				baseTimeModel.clearTimeAttrs(i)
+			for(var i = 0; i < rs2.rows.length; i++) {
+				var cat = tx.executeSql(
+					"SELECT name, color "+
+					"FROM Categories "+
+					"WHERE uid=?",
+					[rs2.rows.item(i).catuid] )
+				baseTimeModel.setTimeAttrs(
+					rs2.rows.item(i).time,
+					cat.rows.item(0).color,
+					cat.rows.item(0).name,
+					rs2.rows.item(i).catuid);
 			}
 		});
 	}
