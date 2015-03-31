@@ -8,16 +8,6 @@ Item {
 	property TimeCalendar calendar
 	property int itemSize
 
-//	Switcher {
-//		id: switcher
-//		height: itemSize
-//		anchors {
-//			left: parent.left
-//			right: parent.right
-//			top: host.top
-//			topMargin: itemSize
-//		}
-//	}
 	signal doSave()
 	signal doLoad()
 
@@ -33,48 +23,24 @@ Item {
 		}
 	}
 
-	CategorySelector {
-		id: curCat
-		theModel: catModel
+	TimeTableEdit {
+		id: timeTable
+		itemSize: host.itemSize
+		catModel: host.catModel
+		timeModel: host.timeModel
 		anchors {
 			top: calendarWidget.bottom
 			left: host.left
 			right: host.right
-			bottom: host.bottom
+			bottom: saveButton.top
 		}
-		itemSize: parent.itemSize
-		z:1
 	}
 
-	ListView {
-		id: timeTable
-		model: timeModel
-		delegate: TimeDelegate {
-			anchors.left: parent.left
-			anchors.right: parent.right
-			itemSize: host.itemSize
-			onItemClicked: timeModel.setTimeAttrs(
-					index,
-					curCat.currentItem.colorId,
-					curCat.currentItem.text,
-					curCat.currentItem.uid)
-		}
-		clip: true
-		anchors {
-			bottom: parent.bottom
-			left: parent.left
-			right: parent.right
-			top: calendarWidget.bottom
-			topMargin: itemSize
-			bottomMargin: itemSize
-		}
-	}
 	Button {
 		id: saveButton
 		anchors {
 			bottom: parent.bottom
-				left: parent.left
-//				right: parent.right
+			left: parent.left
 		}
 		text: "Save"
 		itemSize: host.itemSize
@@ -86,8 +52,7 @@ Item {
 		width: parent.width/2
 		anchors {
 			bottom: parent.bottom
-//				left: parent.left
-				right: parent.right
+			right: parent.right
 		}
 		text: "Today"
 		itemSize: host.itemSize
@@ -103,7 +68,5 @@ Item {
 		target: calendar
 		onDateChanged: doLoad()
 	}
-	onDoLoad: timeTable.positionViewAtIndex(
-			calendar.time(),
-			ListView.Beginning)
+	onDoLoad: timeTable.scrollTo(calendar.time())
 }
