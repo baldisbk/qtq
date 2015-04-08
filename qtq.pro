@@ -5,7 +5,9 @@ QT += qml quick widgets
 TARGET = TimeManager
 
 SOURCES += main.cpp \
-    timemodel.cpp
+    timemodel.cpp \
+    timecalendar.cpp \
+    timestatmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,7 +18,9 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    timemodel.h
+    timemodel.h \
+    timecalendar.h \
+    timestatmodel.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

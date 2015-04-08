@@ -3,6 +3,7 @@
 #include <QtQml>
 
 #include "timemodel.h"
+#include "timecalendar.h"
 
 int main(int argc, char *argv[])
 {
