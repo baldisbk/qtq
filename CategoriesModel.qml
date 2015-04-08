@@ -30,4 +30,18 @@ ListModel {
 				return;
 			}
 	}
+	function catText(uid) {
+		var i;
+		for (i=0; i<count; ++i)
+			if (get(i).uid === uid)
+				return get(i).category
+		return ""
+	}
+	function catColor(uid) {
+		var i;
+		for (i=0; i<count; ++i)
+			if (get(i).uid === uid)
+				return get(i).colorId
+		return ""
+	}
 }

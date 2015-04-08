@@ -127,11 +127,11 @@ Window {
 		target: timeTable
 		onDoSave: {
 			var rn = timeModel.rowNo()
-			for (var i = 0; i < rn; ++i) {
-				var uid = timeModel.uid(i);
-				if (uid === -1)
-					continue;
-				db.transaction(function(tx){
+			db.transaction(function(tx){
+				for (var i = 0; i < rn; ++i) {
+					var uid = timeModel.uid(i);
+					if (uid === -1)
+						continue;
 					tx.executeSql(
 						"INSERT INTO Timetable("+
 							"year, month, day, "+
@@ -142,8 +142,8 @@ Window {
 							calendar.month,
 							calendar.day,
 							i, uid ]);
-				});
-			}
+				}
+			});
 		}
 		onDoLoad: {
 			db.transaction(function(tx){
@@ -155,15 +155,10 @@ Window {
 				for(var i = 0; i < rn; ++i)
 					timeModel.clearTimeAttrs(i)
 				for(var i = 0; i < rs.rows.length; i++) {
-					var cat = tx.executeSql(
-						"SELECT name, color "+
-						"FROM Categories "+
-						"WHERE uid=?",
-						[rs.rows.item(i).catuid] )
 					timeModel.setTimeAttrs(
 						rs.rows.item(i).time,
-						cat.rows.item(0).color,
-						cat.rows.item(0).name,
+						theCategories.catColor(rs.rows.item(i).catuid),
+						theCategories.catText(rs.rows.item(i).catuid),
 						rs.rows.item(i).catuid);
 				}
 			});
@@ -174,18 +169,18 @@ Window {
 		target: baseTable
 		onDoSave: {
 			var rn = baseTimeModel.rowNo()
-			for (var i = 0; i < rn; ++i) {
-				var uid = baseTimeModel.uid(i);
-				if (uid === -1)
-					continue;
-				db.transaction(function(tx){
+			db.transaction(function(tx){
+				for (var i = 0; i < rn; ++i) {
+					var uid = baseTimeModel.uid(i);
+					if (uid === -1)
+						continue;
 					tx.executeSql(
 						"INSERT INTO BaseTimetable("+
 							"time, catuid) "+
 							"VALUES(?, ?)",
 						[ i, uid ]);
-				});
-			}
+				}
+			});
 		}
 	}
 
@@ -229,15 +224,10 @@ Window {
 			for(var i = 0; i < rn; ++i)
 				baseTimeModel.clearTimeAttrs(i)
 			for(var i = 0; i < rs2.rows.length; i++) {
-				var cat = tx.executeSql(
-					"SELECT name, color "+
-					"FROM Categories "+
-					"WHERE uid=?",
-					[rs2.rows.item(i).catuid] )
 				baseTimeModel.setTimeAttrs(
 					rs2.rows.item(i).time,
-					cat.rows.item(0).color,
-					cat.rows.item(0).name,
+					theCategories.catColor(rs2.rows.item(i).catuid),
+					theCategories.catText(rs2.rows.item(i).catuid),
 					rs2.rows.item(i).catuid);
 			}
 		});
