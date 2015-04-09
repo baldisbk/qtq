@@ -9,7 +9,6 @@ Item {
 	property int itemSize
 
 	signal doSave()
-	signal doLoad()
 
 	Calendar {
 		id: calendarWidget
@@ -63,10 +62,9 @@ Item {
 			calendar.day = today.day
 		}
 	}
-	Component.onCompleted: doLoad()
+	Component.onCompleted: timeTable.scrollTo(calendar.time())
 	Connections {
 		target: calendar
-		onDateChanged: doLoad()
+		onDateChanged: timeTable.scrollTo(calendar.time())
 	}
-	onDoLoad: timeTable.scrollTo(calendar.time())
 }

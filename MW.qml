@@ -81,6 +81,26 @@ Window {
 
 	property var db
 
+	function loadTimeModel() {
+		db.transaction(function(tx){
+			var rs = tx.executeSql(
+				"SELECT time, catuid FROM Timetable "+
+				"WHERE year=? AND month=? AND day=?",
+				[ calendar.year, calendar.month, calendar.day ]);
+			var rn = timeModel.rowNo()
+			var i
+			for(i = 0; i < rn; ++i)
+				timeModel.clearTimeAttrs(i)
+			for(i = 0; i < rs.rows.length; i++) {
+				timeModel.setTimeAttrs(
+					rs.rows.item(i).time,
+					theCategories.catColor(rs.rows.item(i).catuid),
+					theCategories.catText(rs.rows.item(i).catuid),
+					rs.rows.item(i).catuid);
+			}
+		});
+	}
+
 	Connections {
 		target: theCategories
 		onAdded: {
@@ -145,24 +165,10 @@ Window {
 				}
 			});
 		}
-		onDoLoad: {
-			db.transaction(function(tx){
-				var rs = tx.executeSql(
-					"SELECT time, catuid FROM Timetable "+
-					"WHERE year=? AND month=? AND day=?",
-					[ calendar.year, calendar.month, calendar.day ]);
-				var rn = timeModel.rowNo()
-				for(var i = 0; i < rn; ++i)
-					timeModel.clearTimeAttrs(i)
-				for(var i = 0; i < rs.rows.length; i++) {
-					timeModel.setTimeAttrs(
-						rs.rows.item(i).time,
-						theCategories.catColor(rs.rows.item(i).catuid),
-						theCategories.catText(rs.rows.item(i).catuid),
-						rs.rows.item(i).catuid);
-				}
-			});
-		}
+	}
+	Connections {
+		target: calendar
+		onDateChanged: loadTimeModel()
 	}
 
 	Connections {
@@ -231,5 +237,6 @@ Window {
 					rs2.rows.item(i).catuid);
 			}
 		});
+		loadTimeModel()
 	}
 }
