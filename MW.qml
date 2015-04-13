@@ -87,7 +87,7 @@ Window {
 				"SELECT time, catuid FROM Timetable "+
 				"WHERE year=? AND month=? AND day=?",
 				[ calendar.year, calendar.month, calendar.day ]);
-			var rn = timeModel.rowNo()
+			var rn = timeModel.count
 			var i
 			for(i = 0; i < rn; ++i)
 				timeModel.clearTimeAttrs(i)
@@ -146,8 +146,14 @@ Window {
 	Connections {
 		target: timeTable
 		onDoSave: {
-			var rn = timeModel.rowNo()
+			var rn = timeModel.count
 			db.transaction(function(tx){
+				tx.executeSql(
+					"DELETE FROM Timetable WHERE "+
+						"year = ? AND "+
+						"month = ? AND "+
+						"day = ?",
+					[calendar.year, calendar.month, calendar.day])
 				for (var i = 0; i < rn; ++i) {
 					var uid = timeModel.uid(i);
 					if (uid === -1)
@@ -174,8 +180,9 @@ Window {
 	Connections {
 		target: baseTable
 		onDoSave: {
-			var rn = baseTimeModel.rowNo()
+			var rn = baseTimeModel.count
 			db.transaction(function(tx){
+				tx.executeSql("DELETE FROM BaseTimetable", [])
 				for (var i = 0; i < rn; ++i) {
 					var uid = baseTimeModel.uid(i);
 					if (uid === -1)
@@ -226,7 +233,7 @@ Window {
 
 			var rs2 = tx.executeSql(
 				"SELECT time, catuid FROM BaseTimetable", [ ]);
-			var rn = baseTimeModel.rowNo()
+			var rn = baseTimeModel.count
 			for(var i = 0; i < rn; ++i)
 				baseTimeModel.clearTimeAttrs(i)
 			for(var i = 0; i < rs2.rows.length; i++) {

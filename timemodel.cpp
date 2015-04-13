@@ -84,11 +84,6 @@ QHash<int, QByteArray> TimeModel::roleNames() const
 	return roles;
 }
 
-int TimeModel::rowNo() const
-{
-	return rowCount(QModelIndex());
-}
-
 int TimeModel::uid(int ind) const
 {
 	return mUids.value(ind, -1);

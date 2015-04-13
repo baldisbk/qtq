@@ -26,11 +26,15 @@ Item {
 			anchors.left: parent.left
 			anchors.right: parent.right
 			itemSize: host.itemSize
-			onItemClicked: timeModel.setTimeAttrs(
-					index,
-					curCat.currentItem.colorId,
-					curCat.currentItem.text,
-					curCat.currentItem.uid)
+			onItemClicked:
+				if (curCat.currentItem.uid === -1)
+					timeModel.clearTimeAttrs(index)
+				else
+					timeModel.setTimeAttrs(
+						index,
+						curCat.currentItem.colorId,
+						curCat.currentItem.text,
+						curCat.currentItem.uid)
 		}
 		clip: true
 		anchors {

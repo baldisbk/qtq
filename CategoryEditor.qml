@@ -10,8 +10,8 @@ Item {
 			id: theContents
 			text: category
 			colorId: model.colorId
-			readOnly: false
-			hasMinus: true
+			readOnly: model.uid===-1
+			hasMinus: model.uid!==-1
 			hasPlus: false
 			itemSize: host.itemSize
 			anchors.left: parent.left

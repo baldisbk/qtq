@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 Item {
 	property int itemSize
-	height: timeColor.height
+	height: itemSize
 	signal itemClicked(int index)
 	Text {
 		id: timeText

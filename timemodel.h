@@ -24,15 +24,21 @@ public:
 
 	// QAbstractItemModel interface
 public:
-	virtual QModelIndex index(int row, int column, const QModelIndex &parent) const;
+	virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 	virtual QModelIndex parent(const QModelIndex &child) const;
-	virtual int rowCount(const QModelIndex &parent) const;
-	virtual int columnCount(const QModelIndex &parent) const;
+	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 	virtual QVariant data(const QModelIndex &index, int role) const;
 	virtual QHash<int, QByteArray> roleNames() const;
 
-	Q_INVOKABLE int rowNo() const;
 	Q_INVOKABLE int uid(int ind) const;
+	Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
+
+	void setCount(int) {}
+	int count() const {return rowCount();}
+
+signals:
+	void countChanged();
 
 public slots:
 	void setTimeAttrs(int ind, int color, QString text, int uid);

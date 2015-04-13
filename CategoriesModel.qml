@@ -2,6 +2,11 @@ import QtQuick 2.0
 
 ListModel {
 	property int lastAdded: 0
+	ListElement {
+		uid: -1
+		category: "<none>"
+		colorId: -1
+	}
 	signal added(int uid, string text, int color)
 	signal removed(int uid)
 	signal changed(int uid, string text, int color)
