@@ -18,6 +18,17 @@ Window {
 
 	ObjectModel {
 		id: thePages
+		StatTable {
+			height: theMainView.height
+			width: theMainView.width
+			itemSize: mw.itemSize
+			anchors.topMargin: itemSize
+
+			catModel: theCategories
+			timeModel: timeModel
+			originModel: baseTimeModel
+			calendar: calendar
+		}
 		TimeTable {
 			id: timeTable
 			height: theMainView.height
@@ -43,17 +54,6 @@ Window {
 			anchors.topMargin: itemSize
 			theModel: theCategories
 		}
-		StatTable {
-			height: theMainView.height
-			width: theMainView.width
-			itemSize: mw.itemSize
-			anchors.topMargin: itemSize
-
-			catModel: theCategories
-			timeModel: timeModel
-			originModel: baseTimeModel
-			calendar: calendar
-		}
 	}
 
 	ListView {
@@ -67,14 +67,15 @@ Window {
 		flickDeceleration: 2000
 
 		onCurrentItemChanged: theHeader.alterText(currentIndex)
+		Component.onCompleted: currentIndex = 1
 	}
 
 	ListModel {
 		id: theHeaderModel
+		ListElement {name: "Stat"}
 		ListElement {name: "Timetable"}
 		ListElement {name: "Origin"}
 		ListElement {name: "Categories"}
-		ListElement {name: "Stat"}
 	}
 
 	Text {
