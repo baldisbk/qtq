@@ -68,6 +68,7 @@ private:
 	double mQuantity;
 
 	QMap<int, Category> mCats;
+	QMap<int, Category> mOriginCats;
 	QList<int> mCatUids;
 };
 

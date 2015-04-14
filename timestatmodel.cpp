@@ -60,19 +60,30 @@ QVariant TimeStatModel::data(const QModelIndex &index, int role) const
 		default:;
 		}
 		break;
-	default:
+	default: {
+		int uid = mCatUids[index.row() - numberOfBaseRows];
 		if (index.row() - numberOfBaseRows >= mCatUids.size())
 			break;
 		switch (role) {
 		case Qt::DisplayRole:
 		case TextRole:
-			return mCats[mCatUids[index.row() - numberOfBaseRows]].text;
+			return mCats[uid].text;
 		case NumberRole:
-			return QString::number(mCats[mCatUids[index.row() - numberOfBaseRows]].number);
+			if (mOriginCats[uid].number == 0)
+				return QString("--% (%1)").
+					arg(mCats[uid].number);
+			else {
+				double percent = mCats[uid].number;
+				percent /= mOriginCats[uid].number;
+				return QString("%1% (%2)").
+					arg(int(percent*100)).
+					arg(mCats[uid].number);
+			}
 		case ColorRole:
-			return mCats[mCatUids[index.row() - numberOfBaseRows]].color;
+			return mCats[uid].color;
 		default:;
 		}
+	}
 	}
 	return QVariant();
 }
@@ -93,17 +104,18 @@ void TimeStatModel::recount()
 {
 	if (!mTimeModel || !mOriginModel)
 		return;
-	QMap<int, Category> cats;
 	int noneOrigin = 0;
 	int noneModel = 0;
 	beginResetModel();
 
 	mPrecision = 0;
 	mQuantity = mTimeModel->rowCount();
-	foreach(int uid, mCatUids)
+	foreach(int uid, mCatUids) {
 		mCats[uid].number = 0;
+		mOriginCats[uid].number = 0;
+	}
 	for(int i = 0; i < mTimeModel->rowCount(); ++i) {
-		++(cats[mOriginModel->uid(i)].number);
+		++(mOriginCats[mOriginModel->uid(i)].number);
 		++(mCats[mTimeModel->uid(i)].number);
 		if (mOriginModel->uid(i) == mTimeModel->uid(i))
 			mPrecision += 1;
@@ -115,8 +127,8 @@ void TimeStatModel::recount()
 	if (noneModel > noneOrigin)
 		mQuantity -= noneModel - noneOrigin;
 	foreach(int uid, mCatUids) {
-		if (mCats[uid].number > cats[uid].number)
-			mQuantity -= mCats[uid].number - cats[uid].number;
+		if (mCats[uid].number > mOriginCats[uid].number)
+			mQuantity -= mCats[uid].number - mOriginCats[uid].number;
 	}
 	mPrecision /= mTimeModel->rowCount();
 	mQuantity /= mTimeModel->rowCount();
