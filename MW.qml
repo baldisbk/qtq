@@ -43,6 +43,17 @@ Window {
 			anchors.topMargin: itemSize
 			theModel: theCategories
 		}
+		StatTable {
+			height: theMainView.height
+			width: theMainView.width
+			itemSize: mw.itemSize
+			anchors.topMargin: itemSize
+
+			catModel: theCategories
+			timeModel: timeModel
+			originModel: baseTimeModel
+			calendar: calendar
+		}
 	}
 
 	ListView {
@@ -63,6 +74,7 @@ Window {
 		ListElement {name: "Timetable"}
 		ListElement {name: "Origin"}
 		ListElement {name: "Categories"}
+		ListElement {name: "Stat"}
 	}
 
 	Text {

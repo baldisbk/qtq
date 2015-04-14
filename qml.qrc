@@ -15,5 +15,6 @@
         <file>Button.qml</file>
         <file>TimeTableEdit.qml</file>
         <file>BaseTimeTable.qml</file>
+        <file>StatTable.qml</file>
     </qresource>
 </RCC>
