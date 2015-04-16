@@ -7,27 +7,35 @@ Rectangle {
 	color: "black"
 	property int colorId: 0
 	readonly property int maxCol: 15
+	property bool invertTextColor: false
 	property bool readOnly
+	property alias text: textBox.text
 
 	onColorIdChanged: {
 		switch (colorId) {
-		case 0: color = "black"; break;
-		case 1: color = "darkred"; break;
-		case 2: color = "purple"; break;
-		case 3: color = "darkblue"; break;
-		case 4: color = "darkcyan"; break;
-		case 5: color = "green"; break;
-		case 6: color = "brown"; break;
-		case 7: color = "gray"; break;
-		case 8: color = "red"; break;
-		case 9: color = "magenta"; break;
-		case 10: color = "blue"; break;
-		case 11: color = "cyan"; break;
-		case 12: color = "green"; break;
-		case 13: color = "yellow"; break;
-		case 14: color = "white"; break;
-		default: color = "darkgrey"; break;
+		case 0: color = "black"; invertTextColor = true; break;
+		case 1: color = "darkred"; invertTextColor = true; break;
+		case 2: color = "purple"; invertTextColor = true; break;
+		case 3: color = "darkblue"; invertTextColor = true; break;
+		case 4: color = "darkcyan"; invertTextColor = false; break;
+		case 5: color = "darkgreen"; invertTextColor = true; break;
+		case 6: color = "brown"; invertTextColor = false; break;
+		case 7: color = "gray"; invertTextColor = false; break;
+		case 8: color = "red"; invertTextColor = false; break;
+		case 9: color = "magenta"; invertTextColor = false; break;
+		case 10: color = "blue"; invertTextColor = true; break;
+		case 11: color = "cyan"; invertTextColor = false; break;
+		case 12: color = "green"; invertTextColor = false; break;
+		case 13: color = "yellow"; invertTextColor = false; break;
+		case 14: color = "white"; invertTextColor = false; break;
+		default: color = "darkgrey"; invertTextColor = true; break;
 		}
+	}
+
+	Text {
+		id: textBox
+		anchors.centerIn: parent
+		color: parent.invertTextColor ? "white" : "black"
 	}
 
 	MouseArea {

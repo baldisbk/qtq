@@ -49,14 +49,10 @@ Item {
 					id: colorRect
 					itemSize: host.itemSize
 					colorId: model.colorId
+					text: model.number
 					readOnly: true
 					anchors.right: parent.right
 					anchors.top: parent.top
-				}
-				Text {
-					id: numberText
-					anchors.fill: colorRect
-					text: model.number
 				}
 			}
 		}
